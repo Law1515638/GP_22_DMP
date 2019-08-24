@@ -1,6 +1,7 @@
 package com.media
 
 import com.util.RptUtils
+import org.apache.commons.lang3.StringUtils
 import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types.{DoubleType, StringType, StructField, StructType}
@@ -23,12 +24,13 @@ object MediaAnalysis {
     val conf = new SparkConf().setAppName(this.getClass.getName).setMaster("local[*]")
       // 设置序列化方式，采用Kryo 序列化方式，比默认序列化方式性能高
       .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+      .set("spark.sql.parquet.mergeSchema", "false")
     // 创建执行入口
     val sc = new SparkContext(conf)
     val sQLContext = new SQLContext(sc)
     // 清洗app 文件，获得全部id 和name ，方便后面的查询
     val appIdAndName: collection.Map[String, String] = sc.textFile("files/app_dict.txt")
-      .map(_.split("\t"))
+      .map(_.split("\\s"))
       .filter(_.length >= 5)
       .map(arr => {
         val appId = arr(4)
@@ -40,15 +42,14 @@ object MediaAnalysis {
     // 读取数据
     val df = sQLContext.read.parquet(inputPath)
     val appNameTup: RDD[(String, List[Double])] = df.map(row => {
-      var realName: String = ""
       val list: List[Double] = RptUtils.getList(row)
       val appId = row.getAs[String]("appid")
       val appName = row.getAs[String]("appname")
-      if (appName.equals("其他"))
-        realName = appTupBroadcast.value.getOrElse(appId, "其他")
+      if (!StringUtils.isNotBlank(appName))
+        (appTupBroadcast.value.getOrElse(appId, "其他"), list)
       else
-        realName = appName
-      (realName, list)
+        (appName, list)
+
     })
     // 聚合
     val resRDD: RDD[(String, List[Double])] = appNameTup.reduceByKey((x, y) => (x zip y).map(x => x._1 + x._2))

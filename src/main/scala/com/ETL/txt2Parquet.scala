@@ -29,7 +29,7 @@ object txt2Parquet {
     val df: DataFrame = DataFormatUtils.DataFormat(sc, sQLContext, inputPath)
     // 统计各省市数据分布
 //    provinceAndCityDistribute(df, sQLContext, sc, outputPath)
-    df.write.parquet("result/dataFormat")
+    df.write.parquet(outputPath)
 
     sc.stop()
   }
