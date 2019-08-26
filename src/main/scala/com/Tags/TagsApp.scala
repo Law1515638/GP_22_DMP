@@ -1,8 +1,9 @@
 package com.Tags
 
-import com.util.{RedisUtils, Tag}
+import com.util.Tag
 import org.apache.commons.lang3.StringUtils
 import org.apache.spark.sql.Row
+import redis.clients.jedis.Jedis
 
 /**
   * Description: XXX
@@ -19,13 +20,14 @@ object TagsApp extends Tag{
 
     // 解析参数
     val row = args(0).asInstanceOf[Row]
+    val jedis = args(1).asInstanceOf[Jedis]
     // 获取app Id 和名称
     val appid = row.getAs[String]("appid")
     val appname = row.getAs[String]("appname")
     if (StringUtils.isNotBlank(appname))
       list :+= ("APP" + appname, 1)
     else if(StringUtils.isNotBlank(appid)) {
-      val newName = RedisUtils.hget("app_dict", appid)
+      val newName = jedis.hget("app_dict", appid)
       if (StringUtils.isNotBlank(newName))
         list :+= ("APP" + newName, 1)
       else

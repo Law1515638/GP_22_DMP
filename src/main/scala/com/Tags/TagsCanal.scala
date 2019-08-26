@@ -20,9 +20,8 @@ object TagsCanal extends Tag{
     val row = args(0).asInstanceOf[Row]
     // 获取渠道Id
     val canalId = row.getAs[Int]("adplatformproviderid")
-    if (canalId != 0) {
-      list :+= ("CN" + canalId, 1)
-    }
+    list :+= ("CN" + canalId, 1)
+
 
     list
   }

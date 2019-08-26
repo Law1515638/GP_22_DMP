@@ -29,7 +29,7 @@ object TagsContext {
     val stopword = sc.textFile(stopPath).map((_, 0)).collectAsMap()
     val bcstopword = sc.broadcast(stopword)
     // 获取符合Id 的数据
-    val res: RDD[List[(String, Int)]] = df.filter(TagUtils.OneUserId)
+    val value: RDD[(String, List[(String, Int)])] = df.filter(TagUtils.OneUserId)
       // 接下来所有的标签都在内部实现
       .map(row => {
       // 去除用户Id
@@ -41,11 +41,16 @@ object TagsContext {
       val equipmentList = TagsEquipment.makeTags(row)
       val keywordList = TagsKeyWords.makeTags(row, bcstopword)
       val locationList = TagsLocation.makeTags(row)
-      appList
+      (userId, adList ++ appList ++ canalList ++ equipmentList ++ keywordList ++ locationList)
     })
-    for (elem <- res.collect) {
-      println(elem)
-    }
+      .reduceByKey((list1, list2) =>
+        // List((String, Int))
+        (list1 ::: list2)
+          .groupBy(_._1)
+          .mapValues(_.foldLeft[Int](0)(_ + _._2))
+          .toList
+      )
+    value.foreach(println)
     sc.stop()
   }
 }
