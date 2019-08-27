@@ -27,16 +27,37 @@ object TagUtils {
       case v if StringUtils.isNotBlank(v.getAs[String]("openudid")) => "OD: " + v.getAs[String]("openudid")
       case v if StringUtils.isNotBlank(v.getAs[String]("androidid")) => "AD: " + v.getAs[String]("androidid")
       case v if StringUtils.isNotBlank(v.getAs[String]("idfa")) => "ID: " + v.getAs[String]("idfa")
-      case v if StringUtils.isNotBlank(v.getAs[String]("imeimd5")) => "IMMD: " + v.getAs[String]("imeimd5")
-      case v if StringUtils.isNotBlank(v.getAs[String]("macmd5")) => "MCMD: " + v.getAs[String]("macmd5")
-      case v if StringUtils.isNotBlank(v.getAs[String]("openudidmd5")) => "ODMD: " + v.getAs[String]("openudidmd5")
-      case v if StringUtils.isNotBlank(v.getAs[String]("androididmd5")) => "ADMD: " + v.getAs[String]("androididmd5")
-      case v if StringUtils.isNotBlank(v.getAs[String]("idfamd5")) => "IDMD: " + v.getAs[String]("idfamd5")
-      case v if StringUtils.isNotBlank(v.getAs[String]("imeisha1")) => "IMSH: " + v.getAs[String]("imeisha1")
-      case v if StringUtils.isNotBlank(v.getAs[String]("macsha1")) => "MCSH: " + v.getAs[String]("macsha1")
-      case v if StringUtils.isNotBlank(v.getAs[String]("openudidsha1")) => "ODSH: " + v.getAs[String]("openudidsha1")
-      case v if StringUtils.isNotBlank(v.getAs[String]("androididsha1")) => "ADSH: " + v.getAs[String]("androididsha1")
-      case v if StringUtils.isNotBlank(v.getAs[String]("idfasha1")) => "IDSH: " + v.getAs[String]("idfasha1")
+      case v if StringUtils.isNotBlank(v.getAs[String]("imeimd5")) => "IMM: " + v.getAs[String]("imeimd5")
+      case v if StringUtils.isNotBlank(v.getAs[String]("macmd5")) => "MCM: " + v.getAs[String]("macmd5")
+      case v if StringUtils.isNotBlank(v.getAs[String]("openudidmd5")) => "ODM: " + v.getAs[String]("openudidmd5")
+      case v if StringUtils.isNotBlank(v.getAs[String]("androididmd5")) => "ADM: " + v.getAs[String]("androididmd5")
+      case v if StringUtils.isNotBlank(v.getAs[String]("idfamd5")) => "IDM: " + v.getAs[String]("idfamd5")
+      case v if StringUtils.isNotBlank(v.getAs[String]("imeisha1")) => "IMS: " + v.getAs[String]("imeisha1")
+      case v if StringUtils.isNotBlank(v.getAs[String]("macsha1")) => "MCS: " + v.getAs[String]("macsha1")
+      case v if StringUtils.isNotBlank(v.getAs[String]("openudidsha1")) => "ODS: " + v.getAs[String]("openudidsha1")
+      case v if StringUtils.isNotBlank(v.getAs[String]("androididsha1")) => "ADS: " + v.getAs[String]("androididsha1")
+      case v if StringUtils.isNotBlank(v.getAs[String]("idfasha1")) => "IDS: " + v.getAs[String]("idfasha1")
+      case _ => "other"
     }
+  }
+
+  def getAllUserId(row: Row): List[String] = {
+    var list = List[String]()
+    if (StringUtils.isNotBlank(row.getAs[String]("imei"))) list :+= "IM: " + row.getAs[String]("imei")
+    if (StringUtils.isNotBlank(row.getAs[String]("mac"))) list :+= "MC: " + row.getAs[String]("mac")
+    if (StringUtils.isNotBlank(row.getAs[String]("openudid"))) list :+= "OD: " + row.getAs[String]("openudid")
+    if (StringUtils.isNotBlank(row.getAs[String]("androidid"))) list :+= "AD: " + row.getAs[String]("androidid")
+    if (StringUtils.isNotBlank(row.getAs[String]("idfa"))) list :+= "ID: " + row.getAs[String]("idfa")
+    if (StringUtils.isNotBlank(row.getAs[String]("imeimd5"))) list :+= "IMM: " + row.getAs[String]("imeimd5")
+    if (StringUtils.isNotBlank(row.getAs[String]("macmd5"))) list :+= "MCM: " + row.getAs[String]("macmd5")
+    if (StringUtils.isNotBlank(row.getAs[String]("openudidmd5"))) list :+= "ODM: " + row.getAs[String]("openudidmd5")
+    if (StringUtils.isNotBlank(row.getAs[String]("androididmd5")))  list :+= "ADM: " + row.getAs[String]("androididmd5")
+    if (StringUtils.isNotBlank(row.getAs[String]("idfamd5")))  list :+= "IDM: " + row.getAs[String]("idfamd5")
+    if (StringUtils.isNotBlank(row.getAs[String]("imeisha1")))  list :+= "IMS: " + row.getAs[String]("imeisha1")
+    if (StringUtils.isNotBlank(row.getAs[String]("macsha1")))  list :+= "MCS: " + row.getAs[String]("macsha1")
+    if (StringUtils.isNotBlank(row.getAs[String]("openudidsha1")))  list :+= "ODS: " + row.getAs[String]("openudidsha1")
+    if (StringUtils.isNotBlank(row.getAs[String]("androididsha1")))  list :+= "ADS: " + row.getAs[String]("androididsha1")
+    if (StringUtils.isNotBlank(row.getAs[String]("idfasha1")))  list :+= "IDS: " + row.getAs[String]("idfasha1")
+    list
   }
 }

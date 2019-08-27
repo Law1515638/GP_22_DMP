@@ -53,6 +53,8 @@ object HBaseUtils {
       tableDesc.addFamily(columnDesc)
       // 创建表
       admin.createTable(tableDesc)
+      admin.close()
+      connection.close()
       println("建表成功！")
     } else
       println("表已存在")
@@ -80,6 +82,7 @@ object HBaseUtils {
       }
       // 存入数据
       table.put(put)
+      connection.close()
     } else {
       println("表不存在")
     }
@@ -100,7 +103,9 @@ object HBaseUtils {
     // 定义结果集
     val result = table.get(get)
     // 定义单元格数组，并从result结果集中拿去数据转换单元格
-    result.rawCells()
+    val cells = result.rawCells()
+    connection.close()
+    cells
   }
 
 
